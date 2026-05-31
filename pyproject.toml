@@ -1,0 +1,54 @@
+[project]
+name = "paper-nmi"
+version = "0.1.0"
+description = "Companion code for 'Attention and Intrinsic Geometry are Structurally Incompatible: A Prescriptive Lagrangian Alternative for Language Modelling' (Semantic Simulation, NMI submission)"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+
+# Direct runtime dependencies for all notebooks under notebooks/conservative_arch/.
+# Versions are those used in the reported experiments (Python 3.12.11).
+dependencies = [
+    # Deep learning
+    "torch>=2.2.2",             # model training, tensor ops throughout
+    "numpy>=1.26.4",            # array math, result serialisation (.npz)
+    # Plotting and visualisation
+    "matplotlib>=3.10.3",       # all figures; mpl_toolkits.mplot3d for 3-D landscapes
+    "Pillow>=12.2.0",           # image I/O (matplotlib.image.imread, FuncAnimation)
+    # Scientific computing
+    "scipy>=1.16.1",            # curve_fit, minimize (well-fitting diagnostics)
+    "scikit-learn>=1.7.1",      # KMeans, PCA, silhouette_score (attractor extraction)
+    # Pretrained model access + tokenisation
+    "transformers>=4.57.6",     # AutoTokenizer
+    "tokenizers>=0.22.2",       # required by transformers
+    "tiktoken>=0.7.0",          # GPT-2 BPE for TinyStories tokenisation
+    # TinyStories data loading (notebooks/conservative_arch/data_module.py)
+    "datasets>=2.19.0",         # roneneldan/TinyStories access
+    "huggingface_hub>=0.23.0",  # HfApi, hf_hub_download
+    "pyarrow>=15.0.0",          # parquet shard reading
+]
+
+[project.optional-dependencies]
+# GPU training — install the CUDA build of PyTorch separately following
+# https://pytorch.org/get-started/locally/ for your CUDA version, e.g.:
+#   pip install torch==2.2.2+cu121 --index-url https://download.pytorch.org/whl/cu121
+# The cpu-only build is sufficient for inference and diagnostic scripts.
+dev = [
+    "ipykernel",   # if running .py scripts as Jupyter-style cells
+    "ipython",
+]
+
+[project.urls]
+Repository     = "https://github.com/dimitarpg13/paper_nmi"
+FrameworkRepo  = "https://github.com/dimitarpg13/semsimula-paper"
+FrameworkPaper = "https://github.com/dimitarpg13/semsimula-paper/blob/main/semsimula_paper.pdf"
+
+# ---------------------------------------------------------------------------
+# No build backend is declared because this repository is a collection of
+# research scripts, not an installable package.  The [project] table above
+# serves as a machine-readable record of the dependency spec and is
+# compatible with:
+#   pip install .          (installs deps only, no package is built)
+#   uv sync                (resolves the full dep graph)
+#   pixi install           (conda/mamba-based alternative)
+# ---------------------------------------------------------------------------
